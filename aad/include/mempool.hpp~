@@ -1,0 +1,341 @@
+/**
+ * @author Maksym Zhelyeznyakov
+ *
+ * @brief Memory pool for AAD class based on small object allocation optimization
+ * allocates memory for many small objects at once
+ *
+ */
+#ifndef __MEMPOOL_HPP__
+#define __MEMPOOL_HPP__
+#include "globals.hpp"
+#include "node.hpp"
+
+#include <iostream>
+#include <cstddef>
+#include <array>
+#include <stdexcept>
+#include <vector>
+#include <iterator>
+#include <cstring> // for memset
+#include <stdexcept>
+#include <list>
+
+namespace aad
+{
+    template<typename MemPool>
+    class PoolIterator
+    {
+        /**
+         * @brief enables iterating over pool with
+         * c++ iterators
+         */
+        public:
+            /* type declarations */
+            using ValueType = typename MemPool::ValueType;
+            using PointerType = typename MemPool::ValueType*;
+            using ReferenceType = typename MemPool::ValueType&;
+            using iteratorCategory = std::bidirectional_iterator_tag;
+            using difference_type = ptrdiff_t;
+            using blockIterator = typename MemPool::blockIterator;
+            using itemIterator = typename MemPool::itemIterator;
+        private:
+            /* iterators */
+            blockIterator _currentBlock;
+            blockIterator _firstBlock;
+            blockIterator _lastBlock;
+
+            itemIterator _currentItem;
+            itemIterator _lastItemInPool;
+
+        public:
+            PoolIterator() {};
+            /* constructor */
+            PoolIterator(blockIterator firstBlock, blockIterator lastBlock,
+                         blockIterator currentBlock,
+                         itemIterator currentItem, itemIterator lastItem) :
+                _firstBlock(firstBlock), _lastBlock(lastBlock),
+                _currentItem(currentItem), _currentBlock(currentBlock),
+                _lastItemInPool(lastItem)
+            {
+            };
+
+
+            PoolIterator& operator++()
+            {
+                /**
+                 * @brief iterates over current item by 1 and skips to next block if needed
+                 */
+
+                ++_currentItem;
+                if (_currentItem == _lastItemInPool)
+                {
+                    return *this;
+                }
+                if ( _currentItem == _currentBlock->end())
+                {
+                    ++_currentBlock;
+                    if(_currentBlock == _lastBlock )
+                    {
+                        throw std::out_of_range("block out of range. this will case a segfault");
+                    }
+                    _currentItem = _currentBlock->begin();
+                }
+                return *this;
+            }
+            PoolIterator& operator++(int)
+            {
+                auto tmp = *this;
+                ++(*this);
+                return tmp;
+            }
+            PoolIterator& operator--()
+            {
+                if ( _currentItem == _currentBlock->begin())
+                {
+                    if ( _currentBlock == _firstBlock )
+                    {
+                        throw std::out_of_range("out of range");
+                    }
+
+                    --_currentBlock;
+                    _currentItem = _currentBlock->end();
+                }
+                --_currentItem;
+                return *this;
+            }
+            PoolIterator& operator--(int)
+            {
+                auto tmp = *this;
+                --(*this);
+                return tmp;
+            }
+            ReferenceType operator[](size_t ind)
+            {
+                /* this SHOULD work */
+                /* TODO test it */
+                return &*(_currentItem) + ind;
+            }
+
+            PointerType operator->()
+            {
+                return &*_currentItem;
+            }
+            const PointerType operator->() const
+            {
+                return &*_currentItem;
+            }
+
+            ReferenceType operator*()
+            {
+                return *_currentItem;
+            }
+            const ReferenceType operator*() const
+            {
+                return *_currentItem;
+            }
+            bool operator ==(const PoolIterator& rhs) const
+            {
+                return ((_currentItem == rhs._currentItem) && (_currentBlock == rhs._currentBlock));
+            }
+            bool operator !=(const PoolIterator& rhs) const
+            {
+                return ((_currentItem != rhs._currentItem) || (_currentBlock != rhs._currentBlock));
+            };
+    };
+    template<typename T, size_t block_size>
+    class MemPool
+    {
+        /*
+        ** Small object optimization class for AAD
+        ** but useful for other things to. Vastly speeds up
+        ** allocation of small objects by requesting memory
+        ** in chunks
+         */
+        private:
+            /* container */
+            std::list<std::array<T, block_size>> _data;
+
+        /* iterators */
+        public:
+            using blockIterator = decltype(_data.begin());
+            using itemIterator = decltype(_data.begin()->begin());
+            using ValueType = T;
+            using Iterator = PoolIterator<MemPool<T,block_size>>;
+        private:
+            blockIterator _currentBlock;
+            blockIterator _lastBlock;
+            blockIterator _markedBlock;
+
+            itemIterator _nextFreeSpace;
+            itemIterator _markedItem;
+
+            void _newblock()
+            {
+                /* allocates new block of memory and resets
+                 * iterators correctly
+                 * */
+                _data.emplace_back();
+                _currentBlock = _lastBlock = std::prev(_data.end());
+                _nextFreeSpace = _currentBlock->begin();
+            }
+
+            void _nextblock()
+            {
+                /* checks if new memory needs to be allocated, if not
+                 * just iterates to the next block, to be used when
+                 * reusing already generated memory pool
+                 * */
+                if ( _currentBlock == std::prev(_data.end()) )
+                {
+                    std::cout<<"creating new block"<<std::endl;
+                    std::cout<< "databegin b4" << *_data.begin()->begin()<< std::endl;
+                    _newblock();
+                    std::cout<< "databegin is now " << *_data.begin()->begin()<< std::endl;
+
+                }
+                else
+                {
+                    ++_currentBlock;
+                    _nextFreeSpace = _currentBlock->begin();
+                }
+            }
+        public:
+            MemPool()
+            {
+                _newblock();
+                _markedBlock = _currentBlock;
+                _markedItem = _nextFreeSpace;
+            };
+            ~MemPool() { /* not needed, primitive containers handle destruction */};
+
+            void clear()
+            {
+                _data.clear();
+                _newblock();
+            }
+            void rewind()
+            {
+                _nextFreeSpace = _data.begin().begin();
+                _currentBlock = _data.begin();
+            }
+            void setMark()
+            {
+                _markedBlock = _currentBlock;
+                _markedItem = _nextFreeSpace;
+            }
+            void rewindToMark()
+            {
+                _currentBlock = _markedBlock;
+                _markedItem = _nextFreeSpace;
+            }
+            void memset(unsigned char value = 0)
+            {
+                for (auto& arr : _data)
+                {
+                    std::memset(&arr[0], value, block_size * sizeof(T));
+                }
+            }
+
+            T* emplace_back()
+            {
+                std::cout<< "i am here" << std::endl;
+                std::cout<< "databegin smth smth smth " << *_data.begin()->begin()<< std::endl;
+
+
+                if( _nextFreeSpace == _currentBlock->end())
+                {
+                    std::cout<< "i am inside emplace back nextfreespace ==currentblock->end()" << std::endl;
+                    _nextblock();
+                }
+                auto ret = _nextFreeSpace;
+                ++_nextFreeSpace;
+                return &*ret;
+            }
+            /* this may cause fragmentation
+             * TODO
+             * fix when building Tape class
+             * */
+            template<size_t n>
+            T* emplace_back_multi()
+            {
+                if( std::distance(_nextFreeSpace, _currentBlock->end()) < n)
+                {
+                    _nextblock();
+                }
+                auto ret = _nextFreeSpace;
+                _nextFreeSpace += n;
+                return &*ret;
+            }
+            T* emplace_back_multi(size_t n);
+
+            template<typename ...Args>
+            T* emplace_back(Args&& ...args)
+            {
+                /* implements perfect forwarding
+                 * of constructor arguments
+                 * for a good explanation of this read
+                 * chapter 10 of
+                 * Savine, Antoine. Modern Computational Finance:
+                 * AAD and Parallel Simulations,
+                 * John Wiley & Sons, Inc., Hoboken, New Jersey, 2019.
+                 * */
+                // No more space in current array
+                if ( _nextFreeSpace == _currentBlock->end())
+                {
+                    _nextblock();
+                }
+                T* emplaced = new (&* _nextFreeSpace)
+                    T(std::forward<Args>(args)...);
+                ++_nextFreeSpace;
+                return emplaced;
+            }
+            Iterator begin()
+            {
+                return Iterator(_data.begin(), _data.end(),
+                                _data.begin(),
+                                _data.begin()->begin(), _nextFreeSpace);
+            }
+            Iterator end()
+            {
+                return Iterator(_data.begin(), _data.end(),
+                                _currentBlock,
+                                _nextFreeSpace, _nextFreeSpace);
+            }
+
+            void print()
+            {
+                /* only here for debugging purposes
+                 * IS NOT GUARANTEED TO WORK
+                 * */
+                 std::cout<<"print"<<std::endl;
+                for(auto it = _data.begin(); it != _data.end(); it++)
+                {
+                    std::array<T, block_size> inner = *it;
+                    for(auto innerIt = inner.begin(); innerIt != inner.end(); innerIt++)
+                    {
+                        std::cout << *innerIt << " ";
+                    }
+                    std::cout << "\n";
+
+                }
+                std::cout << std::endl;
+            }
+            void iteratorpront()
+            {
+                std::cout<<"iteratorpront"<<std::endl;
+                int i = 0;
+                std::cout<< "end is " << *(--end()) << std::endl;
+                std::cout<<"begin is " << *begin() << std::endl;
+                std::cout<< "databegin" << *_data.begin()->begin()<< std::endl;
+                for (auto it = begin(); it != end(); it++)
+                {
+                    std::cout << "huh " << i << std::endl;
+                    std::cout << *it << std::endl;
+                    i++;
+                }
+            }
+
+
+    };
+}
+#endif

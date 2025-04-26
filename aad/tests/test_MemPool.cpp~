@@ -1,0 +1,31 @@
+#include <mempool.hpp>
+#include <gtest/gtest.h>
+#include <iostream>
+#include <addutils.hpp>
+
+
+TEST(MemPoolTest, ConstructorTest)
+{
+    const size_t blocksize = 3;
+    aad::MemPool<double, blocksize> dPool;
+    
+    double *x[5];
+    x[0] = dPool.emplace_back();
+    x[1] = dPool.emplace_back();
+    x[2] = dPool.emplace_back();
+    x[3] = dPool.emplace_back();
+    x[4] = dPool.emplace_back();
+    
+    *x[0] = 3.14151923523;
+    *x[1] = 1.0;
+    *x[2] = 69;
+    *x[3] = 712;
+    *x[4] = 91;
+
+    int i = 0;
+    for(auto v : dPool)
+    {
+      EXPECT_EQ(v, *x[i]);
+      i++;
+    }
+}
