@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/tests.dir/test_MemPool.cpp.o -o tests  ../lib/libgtest_main.a ../libaad.a ../lib/libgtest.a
