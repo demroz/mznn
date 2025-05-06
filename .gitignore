@@ -1,3 +1,10 @@
 external/*
 *build*
-    *lib*
+*lib*
+CMakeFiles*
+*.cache*
+*.vscode*
+*.projectile*
+*.json
+*.cmake
+aad/.cache/

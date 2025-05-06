@@ -3,6 +3,8 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 set(THIS aad)
 project(${THIS} C CXX)
+set(CMAKE_CXX_STANDARD 20)
+
 enable_testing()
 
 include_directories(include)
@@ -17,12 +19,13 @@ link_directories(${CMAKE_SOURCE_DIR}/../logging/lib/)
 set(HEADERS
   ${CMAKE_SOURCE_DIR}/include/globals.hpp
   ${CMAKE_SOURCE_DIR}/include/mempool.hpp
+  ${CMAKE_SOURCE_DIR}/include/node.hpp
+  ${CMAKE_SOURCE_DIR}/include/scalar.hpp
 )
 
 set(SOURCES
-  ${CMAKE_SOURCE_DIR}/source/globals.cpp
-  ${CMAKE_SOURCE_DIR}/source/mempool.cpp
   ${CMAKE_SOURCE_DIR}/source/addutils.cpp
+  ${CMAKE_SOURCE_DIR}/source/autodiff.cpp
 )
 
 add_library(${THIS} STATIC ${SOURCES} ${HEADERS})

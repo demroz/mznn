@@ -29,7 +29,7 @@ namespace aad
          * @brief enables iterating over pool with
          * c++ iterators
          */
-        public:
+        public:	
             /* type declarations */
             using ValueType = typename MemPool::ValueType;
             using PointerType = typename MemPool::ValueType*;
