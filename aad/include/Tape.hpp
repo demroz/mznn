@@ -1,4 +1,4 @@
-#ifndef TAPE_HPP_
+#ifndef TAPE_HPP__
 #define TAPE_HPP__
 #include "globals.hpp"
 #include "mempool.hpp"

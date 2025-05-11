@@ -20,6 +20,9 @@ set(SOURCES
 	test_trig.cpp
 	test_hyper_trig.cpp
 	test_math_ops.cpp
+	test_eigen.cpp
+	test_required_by_eigen.cpp
+	test_tensor.cpp
 )
 
 add_executable(${this} ${SOURCES})

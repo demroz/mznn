@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include "../header/AutodiffDouble.hpp"
+#include <autodiff.hpp>
 TEST(Eigen, MM)
 {
-    Eigen::Matrix<rad::ascalar, 2,2> A, B, C;
-    rad::var<double> a00,a01,a10,a11;
-    rad::var<double> b00,b01,b10,b11;
+    Eigen::Matrix<aad::ascalar, 2,2> A, B, C;
+    aad::Scalar<double> a00,a01,a10,a11;
+    aad::Scalar<double> b00,b01,b10,b11;
 
     a00 = 1.0;
     a01 = 0.0;
@@ -36,7 +36,7 @@ TEST(Eigen, MM)
         }
         std::cout<<"\n";
     }
-    rad::var<double> z;
+    aad::Scalar<double> z;
     z = C(0,0)+C(1,0)+C(0,1)+C(1,1);
     z.propagateToStart();
     std::cout << std::endl;

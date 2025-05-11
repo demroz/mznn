@@ -11,6 +11,7 @@ enable_testing()
 include_directories(include)
 include_directories(../external/include/)
 include_directories(../logging/)
+include_directories(../external/eigen/)
 
 message(${CMAKE_SOURCE_DIR})
 
@@ -34,7 +35,10 @@ set(SOURCES
   ${CMAKE_SOURCE_DIR}/source/autodiff.cpp
 )
 
-add_library(${THIS} STATIC ${SOURCES} ${HEADERS})
+add_library(${THIS} STATIC ${SOURCES} ${HEADERS}
+ include/ops/op_declarations/OpsRequiredByEigenDeclarations.hpp
+ include/ops/op_definitions/OpsRequiredByEigenOverloads.hpp
+ include/EigenSupport.hpp)
 target_link_libraries(${THIS} PUBLIC logmanager)
 
 add_subdirectory(tests)

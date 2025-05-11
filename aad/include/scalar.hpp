@@ -1,4 +1,4 @@
-#ifndef SCALAR_HPP_
+#ifndef SCALAR_HPP__
 #define SCALAR_HPP__
 #include "Tape.hpp"
 #include "node.hpp"
@@ -278,12 +278,11 @@ class Scalar {
   friend Scalar<STDSCALAR> atanh<>(const Scalar<STDSCALAR> &arg);
 
   /* required by Eigen */
-  /*
   const friend Scalar<STDSCALAR> &conj<>(const Scalar<STDSCALAR> &x);
   const friend Scalar<STDSCALAR> &real<>(const Scalar<STDSCALAR> &x);
   friend Scalar<STDSCALAR> imag<>(const Scalar<STDSCALAR> &x);
   friend Scalar<STDSCALAR> abs2<>(const Scalar<STDSCALAR> &x);
-  */
+
   friend std::ostream &operator<<(std::ostream &os,
                                   Scalar<STDSCALAR> const &arg) {
     return os << "(" << arg.item() << "," << arg.adjoint() << ")";

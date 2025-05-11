@@ -33,3 +33,10 @@ cmake -S . -B build/
 cd build/
 make
 make install
+
+echo "downloading eigen"
+cd "$CWD/external/"
+git clone https://gitlab.com/libeigen/eigen.git
+
+
+

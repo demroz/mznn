@@ -5,7 +5,7 @@
 #include "op_definitions/CommonMathOperationDefinitions.hpp"
 #include "op_definitions/HyperTrigFunctionOverload.hpp"
 #include "op_definitions/LogicalOperatorDefinitions.hpp"
+#include "op_definitions/OpsRequiredByEigenOverloads.hpp"
 #include "op_definitions/TrigFunctionOverloads.hpp"
 #include "op_definitions/UnaryOperatorOverloads.hpp"
-
 #endif  // OP_DEFINITIONS_HPP
