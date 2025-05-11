@@ -5,9 +5,9 @@
 
 class LogInitializer {
 public:
-    LogInitializer() {
-        LogManager::init(); // You can pass a file path here if needed
-    }
+  LogInitializer() {
+    LogManager::init(); // You can pass a file path here if needed
+  }
 };
 
 // Define a global instance

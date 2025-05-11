@@ -1,11 +1,7 @@
 #include <autodiff.hpp>
-#include <Tape.hpp>
-#include <scalar.hpp>
-#include <addutils.hpp>
-
-namespace aad{
-    Tape<double> globalTape;
+namespace aad
+{
+    thread_local Tape<double> globalTape;
     template<>
-    thread_local Tape<double> *Scalar<double>::tape = &globalTape;
-    using adouble = Scalar<double>;
+    thread_local Tape<double>* ascalar::tape = &globalTape;
 }

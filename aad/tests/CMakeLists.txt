@@ -13,7 +13,13 @@ LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../external/lib64/)
 set(SOURCES
   test_MemPool.cpp
   test_Tape.cpp
-  test_Scalar.cpp
+	test_Scalar.cpp
+	test_arithmetic_operator_overloads.cpp
+	test_logical_operations.cpp
+	test_const_nodes.cpp
+	test_trig.cpp
+	test_hyper_trig.cpp
+	test_math_ops.cpp
 )
 
 add_executable(${this} ${SOURCES})

@@ -1,19 +1,15 @@
 #ifndef __OP_DECLARATIONS_HPP__
 #define __OP_DECLARATIONS_HPP__
 
+#include "op_declarations/BinaryArithmeticOpDeclarations.hpp"
+#include "op_declarations/CommonMathOperations.hpp"
+#include "op_declarations/HyperTrigDeclarations.hpp"
+#include "op_declarations/LogicalOperatorDeclarations.hpp"
+#include "op_declarations/TrigDeclarations.hpp"
 /*
 ** file needed for declaring functions of
 ** templated classes
 **
 */
 
-namespace aad
-{
-    template<typename STDSCALAR>
-    class Scalar;
-
-    template<typename STDSCALAR>
-    inline Scalar<STDSCALAR> operator+(const Scalar<STDSCALAR> &lhs,
-                                    const Scalar<STDSCALAR> &rhs);
-};
 #endif

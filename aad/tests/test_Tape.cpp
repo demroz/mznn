@@ -11,8 +11,6 @@ TEST(Tape, Constructors) {
     node2->derivative() = 12345.6789;
     node2->adjoint() = 123.456;
 
-    std::cout << node2->derivative();
-    std::cout << node2->adjoint();
 
     ASSERT_NEAR(node1->adjoint(), 0, 1e-10);
     ASSERT_NEAR(node2->derivative(), 12345.6789, 1e-10);
@@ -50,10 +48,6 @@ TEST(Tape, TapeState) {
 
     /* reset adjoints works properly */
     tape.resetAdjoints();
-    int i = 0;
-    for (auto junk : tape) {
-        std::cout << i << " " << junk.adjoint() << std::endl;
-    }
     /* clear works properly */
     tape.clear();
     EXPECT_EQ(tape.begin(), tape.end());
