@@ -38,5 +38,7 @@ echo "downloading eigen"
 cd "$CWD/external/"
 git clone https://gitlab.com/libeigen/eigen.git
 
-
+echo "downloading dear-imgui"
+cd "$CWD/external/"
+git clone https://github.com/ocornut/imgui
 

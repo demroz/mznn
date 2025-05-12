@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/eigen" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/googletest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/junk/googletest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/junk/spdlog" vcs="Git" />
