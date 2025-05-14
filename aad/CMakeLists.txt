@@ -40,6 +40,7 @@ add_library(${THIS} STATIC ${SOURCES} ${HEADERS}
  include/ops/op_definitions/OpsRequiredByEigenOverloads.hpp
  include/EigenSupport.hpp)
 target_link_libraries(${THIS} PUBLIC logmanager)
+install(TARGETS ${THIS} DESTINATION ${CMAKE_SOURCE_DIR}/lib/)
 
 add_subdirectory(tests)
 

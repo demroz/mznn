@@ -29,7 +29,7 @@ class LogManager {
 #define LOG_INFO(...)       (void)0
 #define LOG_DEBUG(...)        (void)0
 #define LOG_WARN(...)        (void)0
-#define LOG_CRITICAL(...)    (void)0
+#define LOG_CRITICAL(...)    LogManager::getLogger()->critical(__VA_ARGS__)
 #endif
 
 #endif // LOGMANAGER_H_

@@ -4,6 +4,7 @@
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/eigen" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/googletest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/imgui" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/junk/googletest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/junk/spdlog" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/spdlog" vcs="Git" />

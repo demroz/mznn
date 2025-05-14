@@ -3,6 +3,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 set(THIS logmanager)
 
 include_directories(../external/include/)
+include_directories(../logging/)
 link_directories(../external/lib64)
 
 set(HEADRS
@@ -14,7 +15,7 @@ set(SOURCES
   LogManager.cpp
 )
 
-set(PUBLIC_HEADER log.hpp)
+set(PUBLIC_HEADER log.hpp LogManager.hpp)
 add_library(${THIS} STATIC ${SOURCES} ${HEADERS})
 install(FILES
    ${PUBLIC_HEADER}

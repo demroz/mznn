@@ -42,3 +42,7 @@ echo "downloading dear-imgui"
 cd "$CWD/external/"
 git clone https://github.com/ocornut/imgui
 
+echo "downloading rapidcsv"
+cd "$CWD/external/"
+git clone https://github.com/d99kris/rapidcsv
+cp "$CWD/external/rapidcsv/src/rapidcsv.h" "$CWD/external/include/"
