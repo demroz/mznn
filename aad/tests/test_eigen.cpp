@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <autodiff.hpp>
+#include <typeinfo>
 TEST(Eigen, MM)
 {
     Eigen::Matrix<aad::ascalar, 2,2> A, B, C;
@@ -42,4 +43,20 @@ TEST(Eigen, MM)
     std::cout << std::endl;
 
     std::cout<<a00.adjoint()<<std::endl;
+}
+
+TEST(Eigen, matrixmultiplydoublescalar)
+{
+    Eigen::Matrix<double, 2, 2> A;
+    Eigen::Matrix<aad::ascalar, 2,2> B;
+
+    A(0,0) = 1.0;
+    A(0,1) = 2.0;
+    A(1,0) = 2.0;
+    A(1,1) = 1.0;
+
+    B(0,0) = std::sqrt(2);
+    B(1,1) = 1.0;
+
+    auto C = A*B;
 }

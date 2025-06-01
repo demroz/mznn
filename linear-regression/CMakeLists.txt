@@ -32,3 +32,5 @@ set(SOURCES
 
 add_executable(${THIS} ${SOURCES} ${HEADERS})
 target_link_libraries(${THIS} PUBLIC aad logmanager)
+
+add_subdirectory(tests)

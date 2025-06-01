@@ -16,7 +16,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-NUMPTS = 1000
+NUMPTS = 3
 
 def generate_random_linear_2D(xmin, xmax, 
                               slope, intercept,

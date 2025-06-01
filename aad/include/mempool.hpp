@@ -106,8 +106,6 @@ class PoolIterator {
     return tmp;
   }
   ReferenceType operator[](size_t ind) {
-    /* this SHOULD work */
-    /* TODO test it */
     return &*(_currentItem) + ind;
   }
 
@@ -128,10 +126,10 @@ class PoolIterator {
 template <typename T, size_t block_size>
 class MemPool {
   /*
-  ** Small object optimization class for AAD
-  ** but useful for other things to. Vastly speeds up
-  ** allocation of small objects by requesting memory
-  ** in chunks
+  * Small object optimization class for AAD
+  * but useful for other things to. Vastly speeds up
+  * allocation of small objects by requesting memory
+  * in chunks
   */
  private:
   /* container */
@@ -158,7 +156,8 @@ class MemPool {
      * */
 
     _data.emplace_back();
-    _currentBlock = _lastBlock = std::prev(_data.end());
+    _currentBlock = std::prev(_data.end());
+    _lastBlock = std::prev(_data.end());
     _nextFreeSpace = _currentBlock->begin();
   }
 
@@ -180,6 +179,7 @@ class MemPool {
  public:
   MemPool() {
     _newblock();
+    memset();
     _markedBlock = _currentBlock;
     _markedItem = _nextFreeSpace;
   };
@@ -216,10 +216,7 @@ class MemPool {
     LOG_DEBUG("called emplace back with without arguments");
     return &*ret;
   }
-  /* this may cause fragmentation
-   * TODO
-   * fix when building Tape class
-   * */
+
   template <size_t n>
   T *emplace_back_multi() {
     if (std::distance(_nextFreeSpace, _currentBlock->end()) < n) {
@@ -232,6 +229,9 @@ class MemPool {
     LOG_DEBUG("return address: {} begin address: {}",
               reinterpret_cast<std::uintptr_t>(&*ret),
               reinterpret_cast<std::uintptr_t>(_data.begin()->begin()));
+    std::uintptr_t retptr = reinterpret_cast<std::uintptr_t>(&*ret);
+    std::uintptr_t begptr = reinterpret_cast<std::uintptr_t>(_data.begin()->begin());
+    std::uintptr_t _nxtFPtr = reinterpret_cast<std::uintptr_t>(_nextFreeSpace);
     return &*ret;
   }
   T *emplace_back_multi(size_t n) {
@@ -239,13 +239,17 @@ class MemPool {
     if (std::distance(_nextFreeSpace, _currentBlock->end()) < n) {
       _nextblock();
     }
-    auto ret = _nextFreeSpace;
+    itemIterator ret = _nextFreeSpace;
     _nextFreeSpace += n;
     LOG_DEBUG("called run time emplace back with size_t n {}", n);
     LOG_DEBUG("return address: {} begin address: {} end address: {}",
              reinterpret_cast<std::uintptr_t>(&*ret),
              reinterpret_cast<std::uintptr_t>(_data.begin()->begin()),
              reinterpret_cast<std::uintptr_t>(&*end()));
+
+    std::uintptr_t retptr = reinterpret_cast<std::uintptr_t>(&*ret);
+    std::uintptr_t begptr = reinterpret_cast<std::uintptr_t>(_data.begin()->begin());
+    std::uintptr_t _nxtFPtr = reinterpret_cast<std::uintptr_t>(_nextFreeSpace);
     return &*ret;
   }
 
@@ -253,11 +257,6 @@ class MemPool {
   T *emplace_back(Args &&...args) {
     /* implements perfect forwarding
      * of constructor arguments
-     * for a good explanation of this read
-     * chapter 10 of
-     * Savine, Antoine. Modern Computational Finance:
-     * AAD and Parallel Simulations,
-     * John Wiley & Sons, Inc., Hoboken, New Jersey, 2019.
      * */
     // No more space in current array
     if (_nextFreeSpace == _currentBlock->end()) {

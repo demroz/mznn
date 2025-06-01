@@ -30,9 +30,9 @@ class Tape {
   }
 
   template <size_t N>
-  constexpr Node<T> *recordNode() {
+  Node<T> *recordNode() {
     Node<T> *node = _nodes.emplace_back(N);
-    if constexpr (N > 0) {
+    if (N > 0) {
       /* gross syntax */
       node->_ptrDerivatives = _derivatives.template emplace_back_multi<N>();
       node->_ptrParentAdjoints =

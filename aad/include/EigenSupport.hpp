@@ -26,5 +26,11 @@ struct NumTraits<aad::Scalar<T>> : NumTraits<T> {
     MulCost = 3
   };
 };
+template<typename T, typename BinaryOp>
+struct ScalarBinaryOpTraits<aad::Scalar<T>,T,BinaryOp> { typedef aad::Scalar<T> ReturnType;  };
+
+template<typename T, typename BinaryOp>
+struct ScalarBinaryOpTraits<T, aad::Scalar<T>,BinaryOp> { typedef aad::Scalar<T> ReturnType;  };
+
 };  // namespace Eigen
 #endif  // EIGENSUPPORT_HPP

@@ -73,10 +73,11 @@ class Scalar {
  public:
   static thread_local Tape<STDSCALAR> *tape;
   Scalar() {};
-  explicit Scalar(const STDSCALAR val) : _value(val) { createNode<0>(); };
+  Scalar(const STDSCALAR val) : _value(val) { createNode<0>(); };
+  // explicit Scalar(const STDSCALAR val) : _value(val) { createNode<0>(); };
   Scalar<STDSCALAR> &operator=(STDSCALAR val) {
     _value = val;
-    createNode();
+    createNode<0>();
     return *this;
   }
 

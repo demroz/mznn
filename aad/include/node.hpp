@@ -50,7 +50,7 @@ class Node {
   }
 
   void backward() {
-    if (!_n || (std::abs(_adjointValue) < TOL)) {
+    if ((!_n || (std::abs(_adjointValue) < TOL)) || (!_ptrParentAdjoints[0])){
       return;
     }
     for (size_t i = 0; i < _n; ++i) {
