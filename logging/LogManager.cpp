@@ -22,6 +22,15 @@ void LogManager::init(const std::string &logFilePath) {
     s_Logger->flush_on(spdlog::level::info);
   } catch (const spdlog::spdlog_ex &ex) {
     std::cerr << "Logger initialization failed: " << ex.what() << std::endl;
+      try{
+        std::cerr << "Attempting to get default logger for program" << std::endl;
+        spdlog::set_default_logger(spdlog::get("MultiSink"));
+        std::cerr << "Successfully set default logger to MultiSink" << std::endl;
+
+      } catch(const spdlog::spdlog_ex &ex)
+      {
+          std::cerr << "Logging broken for current program: " << ex.what() << std::endl;
+      }
   }
 }
 

@@ -56,7 +56,8 @@ TEST(var, doesnt_requires_gaad) {
   derivative(&dummy_test, xx, yy, dfdx, dfdy, H, 5);
 
   for (int i = 0; i < 5; i++) {
-    std::cout << "dz/dx= " << x[i].adjoint() << " dz/dy= " << y[i].adjoint()
-              << " n dfdx= " << dfdx[i] << " n dfdy= " << dfdy[i] << std::endl;
+      LOG_INFO("dz/dx = {} dz/dy = {}", x[i].adjoint(), y[i].adjoint());
+      LOG_INFO("numerically evaluated df/dx = {} numerically evaluated df/dy = {}", dfdx[i], dfdy[i]);
   }
 }
+

@@ -1,13 +1,12 @@
-#include "linearRegression.hpp"
-
+#include <GradientDescentOptimizer.hpp>
+#include <LinearRegression.hpp>
 #include <log.hpp>
-
-#include "../optimizers/GradientDescentOptimizer.hpp"
 namespace mznn {
-LinearRegression::LinearRegression(fs::path infile,
-                                   std::vector<std::string> indepVarNames,
-                                   std::string depVarname,
-                                   bool saveIntermediateProgress) {
+namespace models {
+LinearRegression::LinearRegression(
+    fs::path infile, std::vector<std::string> indepVarNames,
+    std::string depVarname, optimizers::GenericGradientbasedOptimizer opt,
+    std::string loss, bool saveIntermediateProgress) {
   /*
    * @brief	Constructor
    * 		reads infile. sets dependent/independent variables
@@ -139,5 +138,5 @@ void LinearRegression::_loadFile(fs::path infile,
     }
   }
 }
-
+}  // namespace models
 }  // namespace mznn

@@ -29,20 +29,10 @@ TEST(Eigen, MM)
 
     C = A*B;
 
-    for(int i = 0; i < 2; i++)
-    {
-        for (int j = 0; j < 2; j++)
-        {
-            std::cout<<C(i,j).item()<<" ";
-        }
-        std::cout<<"\n";
-    }
     aad::Scalar<double> z;
     z = C(0,0)+C(1,0)+C(0,1)+C(1,1);
     z.propagateToStart();
-    std::cout << std::endl;
 
-    std::cout<<a00.adjoint()<<std::endl;
 }
 
 TEST(Eigen, matrixmultiplydoublescalar)

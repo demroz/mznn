@@ -18,9 +18,10 @@ class GenericGradientbasedOptimizer {
   GenericGradientbasedOptimizer(std::vector<aad::ascalar*>& parameters,
                                 double learning_rate, double momentum)
       : params(parameters), lr(learning_rate), momentum(momentum) {};
+
   virtual ~GenericGradientbasedOptimizer() = default;
   void zero_grad() { aad::ascalar::tape->resetAdjoints(); }
-  virtual void step() = 0;
+  virtual void step() {};
 };
 }  // namespace optimizers
 #endif  // GENERICGRADIENTBASEDOPTIMIZER_HPP
