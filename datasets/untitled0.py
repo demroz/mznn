@@ -1,21 +1,17 @@
-class Solution:
-    def search(self, nums, target):
-        size = len(nums)
-        leftindex = 0
-        rightindex = size-1
+
+def product_value(n):
+    s = 1
+    ndigits = len(str(n))
+    for index in range(1,ndigits+1):
+        digit = (n%(10**index))//(10**(index-1))
+        if digit == 0 :
+            digit = 1
+        s*=digit
+    return s
         
-        while leftindex < rightindex-1:
-            midpoint = leftindex + int((rightindex-leftindex)/2)
-            print(leftindex,rightindex,midpoint)
-            if nums[midpoint] == target:
-                return midpoint
-            if nums[midpoint] > target:
-                    rightindex = midpoint
-            else:
-                leftindex=midpoint
-
-
-        return -1
- 
-sol = Solution()
-print(sol.search(nums=[-1,0,2,4,6,8],target=3))
+n = 3
+s = 0
+for i in range(10**n):
+    print(s,product_value(i))
+    s += product_value(i)
+print(s)

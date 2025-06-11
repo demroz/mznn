@@ -46,3 +46,9 @@ echo "downloading rapidcsv"
 cd "$CWD/external/"
 git clone https://github.com/d99kris/rapidcsv
 cp "$CWD/external/rapidcsv/src/rapidcsv.h" "$CWD/external/include/"
+
+echo "downloading boost"
+cd "$CWD/external/"
+wget -O boost_1_88_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.88.0/boost_1_88_0.tar.gz/download 
+tar xzvf boost_1_88_0.tar.gz
+rm boost_1_88_0.tar.gz

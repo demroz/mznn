@@ -22,6 +22,7 @@ class GenericGradientbasedOptimizer {
   virtual ~GenericGradientbasedOptimizer() = default;
   void zero_grad() { aad::ascalar::tape->resetAdjoints(); }
   virtual void step() {};
+  virtual double step_with_gradient_norm_check() {return 0.0;};
 };
 }  // namespace optimizers
 #endif  // GENERICGRADIENTBASEDOPTIMIZER_HPP

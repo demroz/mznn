@@ -13,8 +13,10 @@ include_directories(
  ${CMAKE_CURRENT_SOURCE_DIR}/../external/include
  ${CMAKE_CURRENT_SOURCE_DIR}/../logging/
  ${CMAKE_CURRENT_SOURCE_DIR}/../external/eigen/
+ ${CMAKE_CURRENT_SOURCE_DIR}/../external/boost_1_88_0/
  ${CMAKE_CURRENT_SOURCE_DIR}/../logging/include
  ${CMAKE_CURRENT_SOURCE_DIR}/../optimizers/
+ ${CMAKE_CURRENT_SOURCE_DIR}/../utilities/
  )
 
 
@@ -26,13 +28,17 @@ ${CMAKE_SOURCE_DIR}/../logging/lib/
 
 set(HEADERS
   LinearRegression.hpp
+	ModelConfig.hpp
 )
 
 set(SOURCES
   sources/LinearRegression.cpp
+	sources/ModelUtilityFunctions.cpp
 )
 
-add_library(${THIS} STATIC ${SOURCES} ${HEADERS}
- ModelConfig.hpp)
+add_library(${THIS} STATIC ${SOURCES} ${HEADERS})
+
 target_link_libraries(${THIS} PUBLIC aad logmanager)
 install(TARGETS ${THIS} DESTINATION ${CMAKE_SOURCE_DIR}/lib/)
+
+add_subdirectory(tests)

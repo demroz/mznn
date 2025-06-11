@@ -72,9 +72,14 @@ class Scalar {
 
  public:
   static thread_local Tape<STDSCALAR> *tape;
-  Scalar() {};
+  Scalar() : _value(0.0) { createNode<0>(); };
   Scalar(const STDSCALAR val) : _value(val) { createNode<0>(); };
   // explicit Scalar(const STDSCALAR val) : _value(val) { createNode<0>(); };
+  Scalar(const Scalar& other)
+  {
+      this->_value = other._value;
+      this->_node = other._node;
+  }
   Scalar<STDSCALAR> &operator=(STDSCALAR val) {
     _value = val;
     createNode<0>();
@@ -89,6 +94,8 @@ class Scalar {
   STDSCALAR &adjoint() { return _node->adjoint(); };
   STDSCALAR adjoint() const { return _node->adjoint(); };
 
+  /* for playing nicely with eigen */
+  operator double() const { return _value;}
   void resetAdjoints() { tape->resetAdjoints(); };
   static void propagateAdjoints(typename Tape<STDSCALAR>::iterator from,
                                 typename Tape<STDSCALAR>::iterator to) {

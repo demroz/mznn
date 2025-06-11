@@ -16,7 +16,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-NUMPTS = 3
+NUMPTS = 1000
 
 def generate_random_linear_2D(xmin, xmax, 
                               slope, intercept,
@@ -29,6 +29,11 @@ def generate_random_linear_2D(xmin, xmax,
     
     reg = LinearRegression().fit(x.reshape(-1,1),noisy_y)
     r_sq = reg.score(x.reshape(-1,1), y)
+    import statsmodels.api as sm
+    X = sm.add_constant(x)
+    model = sm.OLS(y, X).fit()
+    print(model.summary())
+    
     print(f"coefficient of determination: {r_sq}")
     print(f"intercept: {reg.intercept_}")
     print(f"coefficients: {reg.coef_}")
@@ -102,10 +107,10 @@ def generate_random_linear_5D(xmin_arr,xmax_arr,
                               lincoeff, intercept,
                               noisestd
                               ):
-    xx0 = np.linspace(xmin_arr[0], xmax_arr[0], 25)
-    xx1 = np.linspace(xmin_arr[1], xmax_arr[1], 25)
-    xx2 = np.linspace(xmin_arr[2], xmax_arr[2], 25)
-    xx3 = np.linspace(xmin_arr[3], xmax_arr[3], 25)
+    xx0 = np.linspace(xmin_arr[0], xmax_arr[0], 5)
+    xx1 = np.linspace(xmin_arr[1], xmax_arr[1], 5)
+    xx2 = np.linspace(xmin_arr[2], xmax_arr[2], 5)
+    xx3 = np.linspace(xmin_arr[3], xmax_arr[3], 5)
     
     x0,x1,x2,x3 = np.meshgrid(xx0,xx1,xx2,xx3)
     
@@ -121,10 +126,16 @@ def generate_random_linear_5D(xmin_arr,xmax_arr,
     
     reg = LinearRegression().fit(X,noisy_y)
     r_sq = reg.score(X, y)
+    
+
+    #view model summary
+    print(model.summary())
+    pass
     print(f"coefficient of determination: {r_sq}")
     print(f"intercept: {reg.intercept_}")
     print(f"coefficients: {reg.coef_}")
     
+    reg.summary()
     with open('linreg_dataset_5D.csv', 'w') as file:
         file.write("#########################################################################\n")
         file.write("# 3D randomly generated linear regression dataset                       #\n")
@@ -139,14 +150,14 @@ def generate_random_linear_5D(xmin_arr,xmax_arr,
         file.write(f"# generated with normal noise std: {noisestd:.9f}".ljust(72)+"#\n")
         file.write(f"# fit slope_x0: {reg.coef_[0]:.9f}".ljust(72)+"#\n")
         file.write(f"# fit slope_x1: {reg.coef_[1]:.9f}".ljust(72)+"#\n")
-        file.write(f"# fit slope_x1: {reg.coef_[2]:.9f}".ljust(72)+"#\n")
-        file.write(f"# fit slope_x1: {reg.coef_[3]:.9f}".ljust(72)+"#\n")
+        file.write(f"# fit slope_x2: {reg.coef_[2]:.9f}".ljust(72)+"#\n")
+        file.write(f"# fit slope_x3: {reg.coef_[3]:.9f}".ljust(72)+"#\n")
         file.write(f"# fit intercept: {reg.intercept_:.9f}".ljust(72)+"#\n")
         file.write("#########################################################################\n")
         
         file.write("index,x0,x1,x2,x3,y\n")
         for i, xi in enumerate(x0):
-            file.write(f"{i},{x0[i]:.9f},{x1[i]},{noisy_y[i]:.9f}\n")
+            file.write(f"{i},{x0[i]:.9f},{x1[i]},{x2[i]},{x3[i]},{noisy_y[i]:.9f}\n")
     
 if __name__=="__main__":
     generate_random_linear_2D(-1, 1, 1.2345, 2.12515, 0.1, plot=True)
@@ -155,4 +166,4 @@ if __name__=="__main__":
                               3.141592653589793, -3.141592653589793, 2.718281828459045, 0.7124, plot=False)
     generate_random_linear_5D([-1,0,-2,3], [-0.5, 2, 5, 7],
                               [1.0, 1.5, np.sqrt(2), -np.sqrt(3)],
-                               2.718281828459045, 0.7124)
+                               2.718281828459045, 0.124)

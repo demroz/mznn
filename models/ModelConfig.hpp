@@ -17,15 +17,22 @@ namespace fs = std::filesystem;
 
 struct ModelConfig {
   ModelConfig() = default;
-  fs::path inFilePath = "";
+
   fs::path outFilePath = "";
   bool saveIntermediateResults = false;
 
-  std::vector<double> lossArray;
-
-  double LEARNING_RATE = 1e-4;
-  size_t MAXITER = 10000;
+  double LEARNING_RATE = 1e-2;
+  size_t MAXITER = 1000000;
   double CONVERENCE_TOLERANCE = 1e-6;
+  std::vector<double> initial_guess;
+  bool is_initial_guess_provided() { return (initial_guess.size() > 0); }
+
+  // optimizers::GenericGradientbasedOptimizer optimizer;
+  std::string optimizer = "gds";
+
+  std::string loss_function = "l2";
+  void (*loss_fn)(aad::aVector*, Eigen::VectorX<double>*,
+                  aad::ascalar*) = nullptr;
 };
 
 }  // namespace models
